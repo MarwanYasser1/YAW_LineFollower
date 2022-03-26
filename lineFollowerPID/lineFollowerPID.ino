@@ -7,7 +7,7 @@ int sensor4 = A3;
 int sensor5 = A6;  // Right most sensor
 
 // Initial Values of Sensors
-int sensor[5] = {0, 0, 0, 0, 0};
+int sensor[5] = {1, 1, 1, 1, 1};
 
 //Initial Speed of Motor
 int initial_motor_speed = 140;
