@@ -133,8 +133,8 @@ int initial_motor_speed = 140;
 #define motorInput4  7
 #define ENB  10
 
-#define SpeedLimit 110
-#define LowerSpeedLimit 90
+#define SpeedLimit 110     //motors upper speed limit
+#define LowerSpeedLimit 90 // lower speed limit
 
 float Motor_speed_R=SpeedLimit;
 float Motor_speed_L=SpeedLimit;
@@ -144,7 +144,7 @@ float kp= 2.5;
 float ki=0;
 float kd= 0.4;
 //float kir=0.0;
-float lineConstant=3.7;
+float lineConstant=3.7; // Kp for line tracking that tunes how much the robot adjusts
 float accumilation = 0;
 
 float Y_actual_read;
@@ -196,13 +196,13 @@ void reverse()
 
 void Right() {
 
-  delay(90);//habd
+  delay(90);//delay 3alshan el center line beta3 el wheels yeb2a 3and el line
   
   //////////////////////////Changing Setpoint/////////////////
   Serial.println("Ana Right");
 
       // Y_setpoint=yaw;
-    Y_setpoint_img = Y_setpoint;
+    Y_setpoint_img = Y_setpoint;//ben8ayar el setpoint el hayturn 3ala asasha
     
       if (Y_setpoint_img+90==270){
        Y_setpoint=-83;
@@ -211,7 +211,7 @@ void Right() {
        else if (Y_setpoint_img+90==180){
        Y_setpoint=176;
        Y_setpoint_img=180;
-       //////////////////////////////////////////////////////////////////////////////////
+       //////////////////////////////////////specail case law el robot haylef towards el 180/////////////////////////////////
        while(!(yaw < -176 || yaw > 176)){
 
 ////////////////////////////////updating MPU values//////////////////////////////////
@@ -334,7 +334,7 @@ void Right() {
 }
 void Left() {
 
-  delay(10);//habd
+  delay(10);//delay 3alshan el center line beta3 el wheels yeb2a 3and el line
 
   ////////////////////////////Cahnging setpoint////////////////////////
    Serial.println("ana left");
@@ -347,7 +347,7 @@ void Left() {
   else if (Y_setpoint_img-90==-180){
     Y_setpoint=-176;
     Y_setpoint_img=-180;
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////specail case law el robot haylef towards el 180//////////////////////////////
     while(!(yaw < -176 || yaw > 176)){
 
 ////////////////////////////////updating MPU values//////////////////////////////////
@@ -459,7 +459,7 @@ void Left() {
 
     Serial.println("turning left");
     }
-    Stop();
+    Stop();// a stop so that we can see what happened
     delay(500);
 
 }
@@ -580,7 +580,9 @@ void setup() {
 
 void loop() {
 
-  
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////a delay while updating the mpu readings to acount for the yaw values that drift at the begining of a power up ///////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
     while (millis()-d_time<=5000){
       
       if (!dmpReady) return;
@@ -600,6 +602,7 @@ void loop() {
         #endif
     }
     }
+    ///////////updating mpu readings
     if (!dmpReady) return;
     // read a packet from FIFO
     if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) { // Get the Latest packet 
@@ -616,13 +619,17 @@ void loop() {
 
         #endif
     }
+    ////////////end of delay
 
-  
+  //updating line sensor readings
     sensor[0] = !digitalRead(sensor1);
     sensor[1] = !digitalRead(sensor2);
     sensor[2] = !digitalRead(sensor3);
     sensor[3] = !digitalRead(sensor4);
     sensor[4] = !digitalRead(sensor5);
+
+
+    /////////////almost every possible condition////////////////////////////////////////
   
     if((sensor[0]== 0 )&&(sensor[1]== 0 )&&(sensor[2]== 0 )&&(sensor[3]== 0 )&&(sensor[4]== 1 ))//0 0 0 0 1adjust by turning right 
     {
@@ -794,7 +801,6 @@ void loop() {
     Serial.println(pid_val);
     /////////////////////////////////////////////////////////
     
-
 
     Motor_speed_R = abs( constrain(Motor_speed_R, LowerSpeedLimit, SpeedLimit));
     Motor_speed_L = abs( constrain (Motor_speed_L,LowerSpeedLimit, SpeedLimit));
